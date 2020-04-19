@@ -3,7 +3,7 @@ from scipy.optimize import linprog
 from basic_utils import nn2na, get_usage_string, get_min_cut, get_selected_arcs
 
 # IMPORT THE DATA:
-# Primero trabajamos con la desiguldad <= notación A , siendo matrix 0 las, A_ub
+# Primero trabajamos con la desiguldad <= notación NAeq ( desigualdades planta ) ,  A_ub
 # almacenes y la veentas.(demanda )
 
 NN = np.array( [[0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
@@ -28,17 +28,21 @@ NN = np.array( [[0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
 # DATA MANIPULATION:
 #
 NA, arc_idxs = nn2na(NN)
-
+# Nodos con restricciones de igualdad:
 NAeq= NA.copy()
 NAeq[:6, :]=0
+bub = np.array([0,0,0,0,0,0,0,0,0,0,-30,-40,-10,-20,-20,-20])
+
+print ( " arc_idxs ", arc_idxs)
+
+# Nodos con restricciones de menor o igual:
 NAub =NA.copy()
 NAub[6:, :]= 0
+beq = np.array([20,30,10,40,30,10,0,0,0,0,0,0,0,0,0,0])
 
 
 C = np.array([100, 100, 200,200,150,150,150,150,200,200,100,100,100,150,200,200,150,100,100,150,200,200,150,100])
 
-beq = np.array([20,30,10,40,30,10,0,0,0,0,0,0,0,0,0,0])
-bub = np.array([0,0,0,0,0,0,0,0,0,0,-30,-40,-10,-20,-20,-20])
 bounds = tuple([(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None)])
 # Este es un vector y va por definición con [[]] como si fuese una matriz , asi lo acept Py.
 
@@ -60,10 +64,13 @@ bounds = tuple([(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, 
 # x0: valores inciciales para inciar el proceso iterativo
 
 # OPTIMIZE:
-res = linprog(C,A_ub=NAub,b_ub=bub ,A_eq=NAeq, b_eq=beq, bounds=bounds, method='simplex' )
+#res = linprog(C,A_ub=NAub,b_ub=beq ,A_eq=NAeq, b_eq=bub, bounds=bounds, method='simplex' )
+res = linprog(C,A_ub=NAub,b_ub=beq,A_eq=NAeq, b_eq=bub, bounds=bounds, method='simplex' )
 
 # GET THE SOLUTION:
 selarcs = get_selected_arcs(arc_idxs,res.x )
 
 print('## Results ## ')
 print ('The row solution  will be :  ', res)
+print ( " Los arcos de la solución son : ", selarcs)
+
