@@ -5,51 +5,41 @@ from basic_utils import nn2na, get_usage_string, get_min_cut, get_selected_arcs
 # IMPORT THE DATA:
 # Primero trabajamos con la desiguldad <= notación A , siendo matrix 0 las, A_ub
 # almacenes y la veentas.(demanda )
-NN = np.array([[0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+
+NN = np.array( [[0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
 
 # esta NI seria la ecuación de igualdad. Alacenamiento y demanda distintos de 0 A_eq
-NI = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
 
 # DATA MANIPULATION:
 #
-Aub, arc_idys = nn2na(NN)
-Aeq, arc_idxs = nn2na(NI)
+NA, arc_idxs = nn2na(NN)
 
-C = np.array([100, 100, 200,200,150,150,150,150,200,200,100,100,100,150,200,200,150,100,100,150,200,200,150,100 ])
+NAeq= NA.copy()
+NAeq[:6, :]=0
+NAub =NA.copy()
+NAub[6:, :]= 0
 
-beq = np.array([20,30,10,40,30,10,0, 0, 0, 0, 0, 0,0,0,0,0])
+
+C = np.array([100, 100, 200,200,150,150,150,150,200,200,100,100,100,150,200,200,150,100,100,150,200,200,150,100])
+
+beq = np.array([20,30,10,40,30,10,0,0,0,0,0,0,0,0,0,0])
 bub = np.array([0,0,0,0,0,0,0,0,0,0,-30,-40,-10,-20,-20,-20])
-bounds = tuple([(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None)])
+bounds = tuple([(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, None)])
 # Este es un vector y va por definición con [[]] como si fuese una matriz , asi lo acept Py.
 
 
@@ -69,20 +59,11 @@ bounds = tuple([(0, None),(0, None),(0, None),(0, None),(0, None),(0, None),(0, 
 # ‘simplex’ (obsoleto)
 # x0: valores inciciales para inciar el proceso iterativo
 
-
-print('## Optimizer inputs ## \n'
-      'Cost vector: %s \n '
-      'A_eq Node-Arc matrix:\n%s \n'
-      'b_eq demand-supply vector: %s \n'
-      'Bounds of each X arc variable: %s \n' % (C, Aeq, beq, bounds))
-
 # OPTIMIZE:
-res = linprog(C,A_ub=Aub,b_ub=bub ,A_eq=Aeq, b_eq=beq, bounds=bounds, method='simplex' )
+res = linprog(C,A_ub=NAub,b_ub=bub ,A_eq=NAeq, b_eq=beq, bounds=bounds, method='simplex' )
 
 # GET THE SOLUTION:
-selarcs = get_selected_arcs(arc_idys,res.x )
+selarcs = get_selected_arcs(arc_idxs,res.x )
 
 print('## Results ## ')
-print ('The row solution  will be : %s ' % res.x)
-print ('The arcs that make the shortest path will be (from , to ) : %s ' % selarcs)
-print ('The minimo cantidd de kmstr a caminar  will be : %0.2f ' % res.fun )
+print ('The row solution  will be :  ', res)
