@@ -1,0 +1,47 @@
+import numpy as np
+from scipy.optimize import linprog
+from basic_utils import nn2na, get_usage_string, get_min_cut, get_selected_arcs
+
+# IMPORT THE DATA: ( 26 de Abril de 2020 )
+# Marco Inda.
+# Para este ejercicio , Usamos el algoritmo Maximo flujo
+# Y lo comparamos con el método de Algoritmo Dinamico ( esquematizado en fases ó por unidad de tiempo
+# El resultado no es el mismo , el altorimo Dinamico , parece ser más acertado.
+
+NN = np.array([[0, 1, 1, 0],
+               [0, 0, 1, 1],
+               [0, 0, 0, 1],
+               [1, 0, 0, 0]])
+
+
+
+
+# DATA MANIPULATION:
+Aeq, arc_idxs = nn2na(NN)
+# Cambia el vector de Costos , 0 fluye excepto en t, 8 arcos , se suma uno más. 1x8
+C = np.array([0,0,0,0,0,-1])
+# Vector B todo 0 , ojo con los vertices.
+beq = np.array([0, 0, 0, 0])
+# Los limites superiores son las capacidades máximas por cada arco.
+# ojo con el orden , idem a la Matriz NA.
+
+
+bounds = tuple([(0, 5),(0,10),(0,6),(0,3),(0,3),(0,None)])
+
+print('## Optimizer inputs ## \n'
+      'Cost vector: %s \n '
+      'A_eq Node-Arc matrix:\n%s \n'
+      'b_eq demand-supply vector: %s \n'
+      'Bounds of each X arc variable: %s \n' % (C, Aeq, beq, bounds))
+
+# OPTIMIZE:
+res = linprog(C, A_eq=Aeq, b_eq=beq, bounds=bounds, method='revised simplex' )
+
+# GET THE SOLUTION:
+#usage = get_usage_string(arc_idxs, res.x.astype(int),max_q)
+#min_cut = get_min_cut(arc_idxs,res.x ,np.array(max_q))
+max_flow = -1*res.fun
+selarcs = get_selected_arcs(arc_idxs,res.x )
+
+print('## REsultados ## ', res)
+print ("Maximo Flujo : " , max_flow)
