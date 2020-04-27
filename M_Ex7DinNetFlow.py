@@ -33,7 +33,7 @@ NN = np.array([[0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 # DATA MANIPULATION:
 Aeq, arc_idxs = nn2na(NN)
-C = np.array([0, 0, 0, 0, 0, 0, 1, 3, 1, 3,  1, 3, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 0, 0, 0, 0, 0,-1])
+C = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1])
 beq = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 bounds = tuple([(0,None),(0,None),(0,None),(0,None),(0,None),(0,None),(0,5),(0,10),(0,5),(0,10),(0,5),(0,10),(0,5),(0,5),(0,3),(0,6),(0,3),(0,6),(0,3),(0,6),(0,3),(0,6),(0,3),(0,3),(0,3),(0,3),(0,None),(0,None),(0,None),(0,None),(0,None),(0,None)])
@@ -45,7 +45,7 @@ print('## Optimizer inputs ## \n'
       'Bounds of each X arc variable: %s \n' % (C, Aeq, beq, bounds))
 
 # OPTIMIZE:
-res = linprog(C, A_eq=Aeq, b_eq=beq, bounds=bounds, method = 'interior-point' )
+res = linprog(C, A_eq=Aeq, b_eq=beq, bounds=bounds, method = 'revised simplex' )
 
 # GET THE SOLUTION:
 selarcs = get_selected_arcs(arc_idxs,res.x )
@@ -54,3 +54,4 @@ print('## Results ## ')
 print ('The row solution  will be : %s ' % res.x)
 print ('The arcs that make the shortest path will be (from , to ) : %s ' % selarcs)
 print ('The maximum cost will be : %0.2f ' % res.fun )
+print ( " resultado : " , res)
